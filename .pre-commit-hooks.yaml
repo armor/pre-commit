@@ -1,0 +1,11 @@
+# This configuration file allows our pre-commit hooks to be used with pre-commit: http://pre-commit.com/
+
+- id: terraform-validate
+  name: Terraform validate
+  description: Validates all Terraform configuration files
+  entry: hooks/terraform-validate.sh
+  language: script
+  files: \.tf$
+  exclude: \.+.terraform\/.*$
+  require_serial: true
+  args: [--azurerm-provider-version=2.25.0]
