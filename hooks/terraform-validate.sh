@@ -14,7 +14,7 @@ function main() {
 
   for dir in $(echo "$@" | xargs -n1 dirname | sort -u | uniq); do
     local -r inline_provider_match="$(grep 'provider "azurerm" {' "$dir/main.tf")"
-    if [[ -z "$inline_provider_match" ]]; then
+    if [[ -n "$inline_provider_match" ]]; then
       continue
     fi
 
