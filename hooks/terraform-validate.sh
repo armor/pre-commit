@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 # This is a clone of https://github.com/gruntwork-io/pre-commit/blob/master/hooks/terraform-validate.sh
 # It adds support for modules that use the Azure Resource Manager provider 2.0+.
 # This provider requires an explicit `features` block which in most cases is supplied by a super module.
@@ -15,19 +13,27 @@ function main() {
   fi
 
   for dir in $(echo "$@" | xargs -n1 dirname | sort -u | uniq); do
-    pushd "$dir" >/dev/null
-    if [ -n "$azurerm_provider_version" ]; then
-      cat << EOF > provider.tf
+    local -r inline_provider_match="$(grep 'provider "azurerm" {' "$dir/main.tf")"
+    if [[ -z "$inline_provider_match" ]]; then
+      continue
+    fi
+
+    pushd "$dir" >/dev/null || exit 1
+      if [ -n "$azurerm_provider_version" ]; then
+        cat << EOF > provider.tf
 provider "azurerm" {
   version = "$azurerm_provider_version"
   features {}
 }
 EOF
-    fi
-    terraform init -backend=false
-    terraform validate
-    rm provider.tf
-    popd >/dev/null
+      fi
+      terraform init -backend=false
+      terraform validate
+      local -r result="$?"
+      rm provider.tf
+      # TODO: Make sure the provider.tf gets removed.
+    popd >/dev/null || exit 1
+    exit "$result"
   done
 }
 
