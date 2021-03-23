@@ -22,8 +22,10 @@ function main() {
       if [ -n "$azurerm_provider_version" ]; then
         cat << EOF > provider.tf
 provider "azurerm" {
-  version = "$azurerm_provider_version"
   features {}
+}
+provider "aws" {
+  region = "us-east-1"
 }
 EOF
       fi
