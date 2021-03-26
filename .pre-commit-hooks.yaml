@@ -8,4 +8,4 @@
   files: \.tf$
   exclude: \.+.terraform\/.*$
   require_serial: true
-  args: [--azurerm-provider-version=2.25.0]
+  args: []
