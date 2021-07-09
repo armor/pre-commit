@@ -6,7 +6,17 @@
 # See: https://github.com/hashicorp/terraform/pull/24896
 
 function cleanup() {
-  git --no-pager status --untracked-files=all "provider.tf" "*/provider.tf" --porcelain=v2 | xargs rm -f
+  if [ -n "$TF_BUILD" ]; then
+    # we are in a azure devops pipeline - clean everything
+    git clean -fdX;
+  fi
+
+  # remove untracked or ignored provider.tf that we may have added during this process
+  git --no-pager status --untracked-files=all --ignored=matching "provider.tf" "*/provider.tf" --porcelain=v2 | \
+    grep provider.tf | \
+    cut -f2- -d' ' | \
+    grep -vE /$ | \
+    xargs rm -f
 }
 export -f cleanup;
 
