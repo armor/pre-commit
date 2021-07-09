@@ -5,15 +5,6 @@
 # This provider requires an explicit `features` block which in most cases is supplied by a super module.
 # See: https://github.com/hashicorp/terraform/pull/24896
 
-readonly PROVIDER_HCL=<<_EOF_
-provider "azurerm" {
-  features {}
-}
-provider "aws" {
-  region = "us-east-1"
-}
-_EOF_
-
 function cleanup() {
   git --no-pager status --untracked-files=all "provider.tf" "*/provider.tf" --porcelain=v2 | xargs rm -f
 }
@@ -26,7 +17,14 @@ function main() {
   for dir in $(echo "$@" | xargs -n1 dirname | sort -u | uniq); do
     pushd "$dir" >/dev/null || exit 1
     if ! grep -q -R --include='*.tf' -E '^provider "(azurerm|aws)" {' .; then
-      echo "$PROVIDER_HCL" | tee provider.tf >/dev/null
+      tee provider.tf >/dev/null<<_EOF_
+provider "azurerm" {
+  features {}
+}
+provider "aws" {
+  region = "us-east-1"
+}
+_EOF_
     fi
 
     terraform init -backend=false >/dev/null
