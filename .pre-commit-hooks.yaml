@@ -9,3 +9,11 @@
   exclude: \.+.terraform\/.*$
   require_serial: true
   args: []
+
+- id: shellcheck
+  name: shellcheck
+  description: Validate all .sh files with shellcheck
+  language: docker_image
+  types_or: [shell, sh]
+  files: \.(sh)$
+  entry: koalaman/shellcheck:v0.8.0
