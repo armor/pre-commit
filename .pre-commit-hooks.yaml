@@ -2,10 +2,28 @@
 
 - id: terraform-validate
   name: Terraform validate
-  description: Validates all Terraform configuration files
+  description: Validates all Terraform configuration files.
   entry: hooks/terraform-validate.sh
   language: script
   files: \.tf$
   exclude: \.+.terraform\/.*$
   require_serial: true
   args: []
+
+- id: terraform-docs
+  name: terraform-docs
+  description: |
+    Generate terraform docs using the terraform-docs tool.
+    This hook requires expects a configuration to exist at the base of the repo.
+    See https://terraform-docs.io/user-guide/configuration/
+    example .terraform-docs.yml
+      formatter: "markdown table"
+      recursive:
+        enabled: true
+        path: modules
+  entry: quay.io/terraform-docs/terraform-docs:0.16.0
+  language: docker_image
+  files: (\.terraform-docs.yml|README.md|\.tf(vars)?)$
+  pass_filenames: false
+  args:
+    - '.'
