@@ -27,3 +27,10 @@
   pass_filenames: false
   args:
     - '.'
+
+- id: terraform-lock-fail
+  name: forbid .terraform.lock.hcl
+  description: For use with opensource terraform modules.
+  entry: do not commit .terraform.lock.hcl in this repository
+  language: fail
+  files: '\.terraform\.lock\.hcl$'
