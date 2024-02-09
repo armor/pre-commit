@@ -6,5 +6,11 @@
     "url": "git@github.com:armor/pre-commit.git"
   },
   "author": "Armor Defense, Inc.",
-  "license": "SEE LICENSE IN LICENSE"
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "@cncsc/semantic-release-config": "^1.0.3",
+    "@quantum-sec/azure-devops-coverage-transform": "^1.1.0",
+    "@semantic-release/github": "^8.1.0",
+    "semantic-release": "^21.1.2"
+  }
 }
